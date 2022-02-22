@@ -21,30 +21,30 @@ import coding.example.ecommerce.repos.ProductRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
 	@Autowired
 	private ProductRepository productRepository;
 	
-	@GetMapping("/products")
+	@GetMapping()
 	public List<Product> getAllProducts() {
 		return productRepository.findAll();
 	}
 	
-	@GetMapping("/products/{itemNo}")
+	@GetMapping("/{itemNo}")
 	public Product getByProductItemNo(@PathVariable int itemNo) {
 		return productRepository.findById(itemNo)
 				.orElseThrow(() -> new ResourceNotFoundException("Product not exist with "
 						+ "id :" + itemNo));
 	}
 	
-	@PostMapping("/products/add")
+	@PostMapping("/add")
 	public Product createProduct(@RequestBody Product product) {
 		return productRepository.save(product);
 	}
 	
-	@PutMapping("/products/{itemNo}")
+	@PutMapping("/{itemNo}")
     public ResponseEntity<Product> updateProduct(@PathVariable int itemNo, 
     		@RequestBody Product productDetails){
         Product product = productRepository.findById(itemNo)
@@ -62,7 +62,7 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 	
-	@PostMapping("/products/delete")
+	@PostMapping("/delete")
     public ResponseEntity<Map<String, Boolean>> 
 			deleteProduct(@RequestBody List<Product> products) {
         productRepository.deleteAll(products);
@@ -71,4 +71,8 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 	
+	@GetMapping("/brands")
+	public List<String> getBrands() {
+		return productRepository.getAllBrands();
+	}
 }
