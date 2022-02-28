@@ -1,10 +1,11 @@
 package coding.example.ecommerce.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import coding.example.ecommerce.dto.Product;
+import coding.example.ecommerce.entity.ProductEntity;
+import coding.example.ecommerce.service.IProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import coding.example.ecommerce.entity.Product;
-import coding.example.ecommerce.exception.ResourceNotFoundException;
 import coding.example.ecommerce.repos.ProductRepository;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -24,55 +23,42 @@ import coding.example.ecommerce.repos.ProductRepository;
 @RequestMapping("/api/v1/products")
 public class ProductController {
 
-	@Autowired
-	private ProductRepository productRepository;
-	
-	@GetMapping()
-	public List<Product> getAllProducts() {
-		return productRepository.findAll();
-	}
-	
-	@GetMapping("/{itemNo}")
-	public Product getByProductItemNo(@PathVariable int itemNo) {
-		return productRepository.findById(itemNo)
-				.orElseThrow(() -> new ResourceNotFoundException("Product not exist with "
-						+ "id :" + itemNo));
-	}
-	
-	@PostMapping("/add")
-	public Product createProduct(@RequestBody Product product) {
-		return productRepository.save(product);
-	}
-	
-	@PutMapping("/{itemNo}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int itemNo, 
-    		@RequestBody Product productDetails){
-        Product product = productRepository.findById(itemNo)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not exist with "
-                		+ "item no :" + itemNo));
+  private final ProductRepository productRepository;
+  private final IProductService productService;
 
-        product.setBrandName(productDetails.getBrandName());
-        product.setProName(productDetails.getProName());
-        product.setRam(productDetails.getRam());
-        product.setSsd(productDetails.getSsd());
-        product.setPrice(productDetails.getPrice());
-        product.setNumOfStock(productDetails.getNumOfStock());
+  public ProductController(ProductRepository productRepository, IProductService productService) {
+    this.productRepository = productRepository;
+    this.productService = productService;
+  }
 
-        Product updatedProduct = productRepository.save(product);
-        return ResponseEntity.ok(updatedProduct);
-    }
-	
-	@PostMapping("/delete")
-    public ResponseEntity<Map<String, Boolean>> 
-			deleteProduct(@RequestBody List<Product> products) {
-        productRepository.deleteAll(products);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return ResponseEntity.ok(response);
-    }
-	
-	@GetMapping("/brands")
-	public List<String> getBrands() {
-		return productRepository.getAllBrands();
-	}
+  @GetMapping()
+  public ResponseEntity<List<Product>> getAllProducts() {
+    return this.productService.getAllProducts();
+  }
+
+  @GetMapping("/{itemNo}")
+  public ResponseEntity<Product> getByProductItemNo(@PathVariable Long itemNo) {
+    return this.productService.getByProductItemNo(itemNo);
+  }
+
+  @PostMapping("/add")
+  public ProductEntity createProduct(@RequestBody ProductEntity productEntity) {
+    return productRepository.save(productEntity);
+  }
+
+  @PutMapping("/{itemNo}")
+  public ResponseEntity<Product> updateProduct(@PathVariable Long itemNo,
+                                               @RequestBody Product product) {
+    return this.productService.updateProduct(itemNo, product);
+  }
+
+  @PostMapping("/delete")
+  public ResponseEntity<Map<String, Boolean>> deleteProductList(@RequestBody List<Product> productList) {
+    return this.productService.deleteProductList(productList);
+  }
+
+  @GetMapping("/brands")
+  public ResponseEntity<List<String>> getBrands() {
+    return this.productService.getAllBrands();
+  }
 }

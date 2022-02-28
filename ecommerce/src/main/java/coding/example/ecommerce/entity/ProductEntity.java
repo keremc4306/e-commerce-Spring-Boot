@@ -11,33 +11,35 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @Entity
 @Table(name = "products")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class ProductEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "item_no")
-	private int itemNo;
+	private Long itemNo;
 	
 	@Column(name = "brand_name")
 	private String brandName;
 	
 	@Column(name = "pro_name")
-	private String proName;
+	private String productName;
 	
 	@Column(name = "ram")
-	private int ram;
+	private Long ram;
 	
 	@Column(name = "ssd")
-	private int ssd;
+	private Long ssd;
 	
 	@Column(name = "price")
-	private int price;
+	private BigDecimal price;
 	
 	@Column(name = "num_of_stock")
-	private int numOfStock;
+	private Long numOfStock;
 }
