@@ -2,10 +2,10 @@ package coding.example.ecommerce.service;
 
 import java.util.List;
 
+import coding.example.ecommerce.entity.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import coding.example.ecommerce.entity.Product;
 import coding.example.ecommerce.repos.ProductRepository;
 
 @Service
@@ -14,17 +14,17 @@ public class ProductService {
 	@Autowired
 	ProductRepository productRepository;
 	
-	public Product createProduct(Product product) {
-		productRepository.save(product);
-		return product;
+	public ProductEntity createProduct(ProductEntity productEntity) {
+		productRepository.save(productEntity);
+		return productEntity;
 	}
 	
-	public List<Product> viewProduct(Product product) {
+	public List<ProductEntity> viewProduct(ProductEntity productEntity) {
 		return productRepository.findAll();
 	}
 	
-	public Product deleteProduct(Product product) {
-		productRepository.delete(product);
-		return product;
+	public ProductEntity deleteProduct(ProductEntity productEntity) {
+		productRepository.delete(productEntity);
+		return productEntity;
 	}
 }

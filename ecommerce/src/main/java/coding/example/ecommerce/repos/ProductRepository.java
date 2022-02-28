@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import coding.example.ecommerce.entity.Product;
+import coding.example.ecommerce.entity.ProductEntity;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Integer>{
-	@Query("select distinct p.brandName from Product p")
+public interface ProductRepository extends JpaRepository<ProductEntity, Long>{
+	@Query("select distinct p.brandName from ProductEntity p")
 	List<String> getAllBrands();
 }

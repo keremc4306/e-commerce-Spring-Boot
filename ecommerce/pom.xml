@@ -15,6 +15,7 @@
 	<description>e-commerce project</description>
 	<properties>
 		<java.version>11</java.version>
+		<dependency.mapstruct.version>1.4.1.Final</dependency.mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -51,6 +52,18 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- mapstruct dependency -->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${dependency.mapstruct.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
+			<version>${dependency.mapstruct.version}</version>
 		</dependency>
 	</dependencies>
 
