@@ -1,4 +1,4 @@
-package coding.example.ecommerce.repos;
+package coding.example.ecommerce.repository;
 
 import java.util.List;
 
