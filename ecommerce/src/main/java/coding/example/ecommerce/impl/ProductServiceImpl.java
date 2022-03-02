@@ -4,12 +4,12 @@ import coding.example.ecommerce.dto.Product;
 import coding.example.ecommerce.entity.ProductEntity;
 import coding.example.ecommerce.exception.ResourceNotFoundException;
 import coding.example.ecommerce.mapper.ProductMapper;
-import coding.example.ecommerce.repos.ProductRepository;
+import coding.example.ecommerce.message.MessageUtilityImpl;
+import coding.example.ecommerce.repository.ProductRepository;
 import coding.example.ecommerce.service.IProductService;
+import coding.example.ecommerce.type.EnumDefinition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Map;
@@ -39,8 +39,7 @@ public class ProductServiceImpl implements IProductService {
   @Override
   public ResponseEntity<Product> getByProductItemNo(Long itemNo) {
     ProductEntity productEntity = this.productRepository.findById(itemNo)
-        .orElseThrow(() -> new ResourceNotFoundException("ProductEntity not exist with "
-            + "item no :" + itemNo));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageUtilityImpl.getMessage("productEntity.notFound.withItemNo", itemNo)));
 
     return ResponseEntity.ok(this.productMapper.toDto(productEntity));
   }
@@ -48,8 +47,7 @@ public class ProductServiceImpl implements IProductService {
   @Override
   public ResponseEntity<Product> updateProduct(Long itemNo, Product product) {
     ProductEntity productEntity = this.productRepository.findById(itemNo)
-        .orElseThrow(() -> new ResourceNotFoundException("ProductEntity not exist with "
-            + "item no :" + itemNo));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageUtilityImpl.getMessage("productEntity.notFound.withItemNo", itemNo)));
 
     this.generateUpdatedProductEntity(productEntity, product);
 
@@ -69,7 +67,7 @@ public class ProductServiceImpl implements IProductService {
   @Override
   public ResponseEntity<Map<String, Boolean>> deleteProductList(List<Product> productList) {
     this.productRepository.deleteAll(this.productMapper.toEntityList(productList));
-    return ResponseEntity.ok(Map.of("deleted", true));
+    return ResponseEntity.ok(Map.of(EnumDefinition.ProductStatus.DELETED.getCode(), true));
   }
 
   private void generateUpdatedProductEntity(ProductEntity productEntity, Product product) {
